@@ -3,6 +3,8 @@ import random
 unique = []
 lista = []
 
+max_moves = 10;
+
 def get_position(ind, prev_turn):
     turns = []
     if (ind  > 0 and ind <= 2) or (ind > 3 and ind <= 5) or(ind > 6 and ind <= 8)  and prev_turn != "R":
@@ -19,7 +21,7 @@ def solution(arr,turn,prev_turns):
     #print(arr[:3])
     #print(arr[3:6])
     #print(arr[6:])
-    print(prev_turns)
+    #print(prev_turns)
 
     if turn == "":
         ind = arr.index(9)
@@ -27,6 +29,9 @@ def solution(arr,turn,prev_turns):
         for turn in turns:
             solution(arr,turn,prev_turns)
     else:
+        if len(prev_turns) == max_moves:
+            print(prev_turns)
+            print(arr)
         ind = arr.index(9)
         if turn == "L":
             arr[ind] = arr[ind-1]
@@ -41,12 +46,12 @@ def solution(arr,turn,prev_turns):
             arr[ind] = arr[ind+3]
             arr[ind+3] = 9
         if arr == lista:
-            return False
+            return
         if arr == range(1,10):
             return True
         ind = arr.index(9)
-        turns = get_position(ind,turn)
         prev_turns.append(turn)
+        turns = get_position(ind,turn)
         for turn in turns:
             solution(arr,turn,prev_turns)
 
