@@ -102,11 +102,11 @@ int Node::h = 0;
 
 void Node::Set_ideals()
 {
-    if (this->value <= 1 && this->value >= 3)
+    if (this->value <= 3 && 1 <= this->value)
         this->idealy = 3;
-    if (this->value <= 6 && this->value >= 4)
+    if (this->value <= 6 && 4 <= this->value)
         this->idealy = 2;
-    if (this->value <= 9 && this->value >= 7)
+    if (this->value <= 9 && 7 <= this->value)
         this->idealy = 1;
 
     if (this->value == 1 || this->value == 4 || this->value == 7)
@@ -121,8 +121,10 @@ void Node::Set_ideals()
 
 void Node::Calculate_heuristic()
 {
-    int xdiff = x - this->idealx;
-    int ydiff = y - this->idealy;
+    int xdiff = this->x - this->idealx;
+    xdiff = abs(xdiff);
+    int ydiff = this->y - this->idealy;
+    ydiff = abs(ydiff);
 
     int diff = xdiff + ydiff;
     this->Setheuristic(diff);
@@ -132,9 +134,9 @@ void Node::Calculate_heuristic()
 void Calculate_Manhattan_distance(std::vector<Node> nodes)
 {
     int sum = 0;
-    for (Node &n : nodes)
+    for (int i = 0; i < nodes.size(); i++)
     {
-        sum += n.Getheuristic();
+        sum += nodes[i].Getheuristic();
     }
     Node::Set_h(sum);
 }
@@ -153,24 +155,31 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes)
     int mini = 999;
     std::vector<std::string> turns;
     int ind = GetNode(nodes, this->value);
+    int h = Node::Get_h();
+    int g = Node::Get_g();
+   // int f = Node::Get_f();
     if (nodes[ind].GetX() > 1)
     {
-        if (Node::Get_h() - nodes[ind - 1].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
+        int heur = nodes[ind - 1].Getheuristic();
+        if (h - heur + g + 1 <= g + h)
             turns.push_back("L");
     }
     if (nodes[ind].GetX() < 3)
     {
-        if (Node::Get_h() - nodes[ind + 1].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
+        int heur = nodes[ind + 1].Getheuristic();
+         if (h - heur + g + 1 <= g + h)
             turns.push_back("R");
     }
     if (nodes[ind].GetY() < 3)
     {
-        if (Node::Get_h() - nodes[ind - 3].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
+        int heur = nodes[ind - 3].Getheuristic();
+         if (h - heur + g + 1 <= g + h)
             turns.push_back("U");
     }
     if (nodes[ind].GetY() > 1)
     {
-        if (Node::Get_h() - nodes[ind + 3].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
+        int heur = nodes[ind + 3].Getheuristic();
+         if (h - heur + g + 1 <= g + h)
             turns.push_back("D");
     }
     return turns;
@@ -188,8 +197,11 @@ bool inPlace(std::vector<Node> nodes)
 
 std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> prev_turns)
 {
+     std::vector<std::string> empty;
     if (turn == "")
     {
+        if(!prev_turns.empty())
+            return empty;
         if (inPlace(arr))
             return prev_turns;
         int ind = GetNode(arr, 9);
@@ -228,8 +240,6 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
         }
         std::vector<std::string> tmp;
         prev_turns.push_back(turn);
-        if (Node::Get_g() + Node::Get_h() > Node::Get_f())
-            return tmp;
         if (inPlace(arr))
             return prev_turns;
         std::vector<std::string> turns = arr[ind].Get_position(arr);
@@ -240,5 +250,5 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
                 prev_turns.insert(std::end(prev_turns), std::begin(tmp), std::end(tmp));
         }
     }
-    return prev_turns;
+    return empty;
 }
