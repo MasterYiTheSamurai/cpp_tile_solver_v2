@@ -153,22 +153,22 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes)
     int mini = 999;
     std::vector<std::string> turns;
     int ind = GetNode(nodes, this->value);
-    if (x > 1)
+    if (nodes[ind].GetX() > 1)
     {
         if (Node::Get_h() - nodes[ind - 1].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
             turns.push_back("L");
     }
-    if (x < 3)
+    if (nodes[ind].GetX() < 3)
     {
         if (Node::Get_h() - nodes[ind + 1].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
             turns.push_back("R");
     }
-    if (y < 3)
+    if (nodes[ind].GetY() < 3)
     {
         if (Node::Get_h() - nodes[ind - 3].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
             turns.push_back("U");
     }
-    if (y > 1)
+    if (nodes[ind].GetY() > 1)
     {
         if (Node::Get_h() - nodes[ind + 3].Getheuristic() + Node::Get_g() + 1 <= Node::Get_f())
             turns.push_back("D");
@@ -186,18 +186,22 @@ bool inPlace(std::vector<Node> nodes)
     return true;
 }
 
-bool Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> prev_turns)
+std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> prev_turns)
 {
     if (turn == "")
     {
         if (inPlace(arr))
-            return true;
+            return prev_turns;
         int ind = GetNode(arr, 9);
         std::vector<std::string> turns = arr[ind].Get_position(arr);
         for (const std::string &t : turns)
         {
-            Solve(arr, t, prev_turns);
+
+            std::vector<std::string> tmp = Solve(arr, t, prev_turns);
+            if (!tmp.empty())
+                return tmp;
         }
+        return prev_turns;
     }
     else
     {
@@ -222,16 +226,19 @@ bool Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> pre
             std::swap(arr[ind], arr[ind + 3]);
             Node::Increase_g();
         }
-        if (Node::Get_g() + Node::Get_h() > Node::Get_f())
-            return false;
-        if (inPlace(arr))
-            return true;
+        std::vector<std::string> tmp;
         prev_turns.push_back(turn);
+        if (Node::Get_g() + Node::Get_h() > Node::Get_f())
+            return tmp;
+        if (inPlace(arr))
+            return prev_turns;
         std::vector<std::string> turns = arr[ind].Get_position(arr);
         for (const std::string &t : turns)
         {
-            Solve(arr, t, prev_turns);
+            tmp = Solve(arr, t, prev_turns);
+            if (!tmp.empty())
+                prev_turns.insert(std::end(prev_turns), std::begin(tmp), std::end(tmp));
         }
     }
-    return false;
+    return prev_turns;
 }
