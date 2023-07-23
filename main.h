@@ -27,9 +27,9 @@ public:
     void Set_ideals();
     void Calculate_heuristic();
     std::vector<std::string> Get_position();
-     static void Set_g(int value)
+     static void Increase_g()
     {
-         Node::g = value;
+         Node::g++;
     }
      static int Get_g()
     {
@@ -170,12 +170,12 @@ bool inPlace(std::vector<Node> nodes)
     return true;
 }
 
-Node Get9(std::vector<Node> nodes)
+int GetNode(std::vector<Node> nodes, int value)
 {
-    for (Node &n : nodes)
+    for(int i = 0; i < nodes.size();i++)
     {
-        if (n.Getvalue() == 9)
-            return n;
+        if(nodes[i].Getvalue() == value)
+            return i;
     }
 }
 
@@ -185,8 +185,8 @@ bool Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> pre
     {
         if (inPlace(arr))
             return true;
-        Node nine = Get9(arr);
-        std::vector<std::string> turns = nine.Get_position();
+        int ind = GetNode(arr, 9);
+        std::vector<std::string> turns = arr[ind].Get_position();
         for (const std::string &t : turns)
         {
             Solve(arr, t, prev_turns);
@@ -194,36 +194,33 @@ bool Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> pre
     }
     else
     {
-        Node nine = Get9(arr);
-        // TODO 
-        // Finish turning logic
-        // auto ind = std::find(arr.begin(),arr.begin()+9,nine);
-        /* if (turn == "L")
+        int ind = GetNode(arr, 9);
+         if (turn == "L")
          {
              std::swap(arr.at(ind), arr[ind - 1]);
-             Node::g++;
+              Node::Increase_g();
          }
          if (turn == "R")
          {
              std::swap(arr[ind], arr[ind + 1]);
-             Node::g++;
+              Node::Increase_g();
          }
          if (turn == "U")
          {
              std::swap(arr[ind], arr[ind - 3]);
-             Node::g++;
+             Node::Increase_g();
          }
          if (turn == "D")
          {
              std::swap(arr[ind], arr[ind + 3]);
-             Node::g++;
-         }*/
+             Node::Increase_g();
+         }
         if(Node::Get_g()+Node::Get_h() > Node::Get_f())
             return false;
         if (inPlace(arr))
             return true;
         prev_turns.push_back(turn);
-        std::vector<std::string> turns = nine.Get_position();
+        std::vector<std::string> turns = arr[ind].Get_position();
         for (const std::string &t : turns)
         {
             Solve(arr, t, prev_turns);
