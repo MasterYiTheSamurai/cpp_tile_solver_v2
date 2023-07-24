@@ -158,25 +158,25 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes)
     if (nodes[ind].GetX() > 1)
     {
         int heur = nodes[ind - 1].Getheuristic();
-        if(heur > 0)
+        if (heur > 0)
             turns.push_back("L");
     }
     if (nodes[ind].GetX() < 3)
     {
         int heur = nodes[ind + 1].Getheuristic();
-        if(heur > 0)
+        if (heur > 0)
             turns.push_back("R");
     }
     if (nodes[ind].GetY() < 3)
     {
         int heur = nodes[ind - 3].Getheuristic();
-        if(heur > 0)
+        if (heur > 0)
             turns.push_back("U");
     }
     if (nodes[ind].GetY() > 1)
     {
         int heur = nodes[ind + 3].Getheuristic();
-        if(heur > 0)
+        if (heur > 0)
             turns.push_back("D");
     }
     return turns;
@@ -186,7 +186,7 @@ bool inPlace(std::vector<Node> nodes)
 {
     for (Node &node : nodes)
     {
-        if ((node.GetIdealX() != node.GetX()  && node.Getvalue()!= 9) || (node.GetIdealY() != node.GetY() && node.Getvalue()!= 9))
+        if ((node.GetIdealX() != node.GetX() && node.Getvalue() != 9) || (node.GetIdealY() != node.GetY() && node.Getvalue() != 9))
             return false;
     }
     return true;
@@ -277,7 +277,9 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
         {
             tmp = Solve(arr, t, prev_turns);
             if (!tmp.empty())
-                prev_turns.insert(std::end(prev_turns), std::begin(tmp), std::end(tmp));
+            {
+                return tmp;
+            }
         }
     }
     return empty;

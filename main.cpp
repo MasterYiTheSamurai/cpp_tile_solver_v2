@@ -5,10 +5,12 @@
 int main()
 {
 
+    char a;
+
     std::vector<Node> unique;
     std::vector<std::string> prev_turns;
 
-    Node n(6, 1, 3);
+    /*Node n(6, 1, 3);
     Node n1(3, 2, 3);
     Node n2(1, 3, 3);
     Node n3(8, 1, 2);
@@ -16,7 +18,17 @@ int main()
     Node n5(4, 3, 2);
     Node n6(7, 1, 1);
     Node n7(5, 2, 1);
-    Node n8(9, 3, 1);
+    Node n8(9, 3, 1);*/
+
+    Node n(1, 1, 3);
+    Node n1(2, 2, 3);
+    Node n2(3, 3, 3);
+    Node n3(9, 1, 2);
+    Node n4(4, 2, 2);
+    Node n5(6, 3, 2);
+    Node n6(7, 1, 1);
+    Node n7(5, 2, 1);
+    Node n8(8, 3, 1);
 
     unique.push_back(n);
     unique.push_back(n1);
@@ -32,10 +44,14 @@ int main()
 
     Node::Set_f(Node::Get_h());
 
-    if (!Solve(unique, "", prev_turns).empty())
+    prev_turns = Solve(unique, "", prev_turns);
+
+    if (!prev_turns.empty())
     {
         std::cout << "Heureka" << std::endl;
     }
+
+    std::cin >> a;
 
     return 0;
 }
