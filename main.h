@@ -154,32 +154,29 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes)
 {
     int mini = 999;
     std::vector<std::string> turns;
-    int ind = GetNode(nodes, this->value);
-    int h = Node::Get_h();
-    int g = Node::Get_g();
-   // int f = Node::Get_f();
+    int ind = GetNode(nodes, 9);
     if (nodes[ind].GetX() > 1)
     {
         int heur = nodes[ind - 1].Getheuristic();
-        if (h - heur + g + 1 <= g + h)
+        if(heur > 0)
             turns.push_back("L");
     }
     if (nodes[ind].GetX() < 3)
     {
         int heur = nodes[ind + 1].Getheuristic();
-         if (h - heur + g + 1 <= g + h)
+        if(heur > 0)
             turns.push_back("R");
     }
     if (nodes[ind].GetY() < 3)
     {
         int heur = nodes[ind - 3].Getheuristic();
-         if (h - heur + g + 1 <= g + h)
+        if(heur > 0)
             turns.push_back("U");
     }
     if (nodes[ind].GetY() > 1)
     {
         int heur = nodes[ind + 3].Getheuristic();
-         if (h - heur + g + 1 <= g + h)
+        if(heur > 0)
             turns.push_back("D");
     }
     return turns;
@@ -189,7 +186,7 @@ bool inPlace(std::vector<Node> nodes)
 {
     for (Node &node : nodes)
     {
-        if (node.GetIdealX() != node.GetX() || node.GetIdealY() != node.GetIdealY())
+        if ((node.GetIdealX() != node.GetX()  && node.Getvalue()!= 9) || (node.GetIdealY() != node.GetY() && node.Getvalue()!= 9))
             return false;
     }
     return true;
@@ -197,10 +194,10 @@ bool inPlace(std::vector<Node> nodes)
 
 std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> prev_turns)
 {
-     std::vector<std::string> empty;
+    std::vector<std::string> empty;
     if (turn == "")
     {
-        if(!prev_turns.empty())
+        if (!prev_turns.empty())
             return empty;
         if (inPlace(arr))
             return prev_turns;
@@ -220,23 +217,56 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
         int ind = GetNode(arr, 9);
         if (turn == "L")
         {
+
+            int tmp_x = arr[ind - 1].GetX();
+            int tmp_y = arr[ind - 1].GetY();
+            arr[ind - 1].SetX(arr[ind].GetX());
+            arr[ind - 1].SetY(arr[ind].GetY());
+            arr[ind].SetX(tmp_x);
+            arr[ind].SetY(tmp_y);
             std::swap(arr.at(ind), arr[ind - 1]);
             Node::Increase_g();
+            arr[ind - 1].Calculate_heuristic();
+            arr[ind].Calculate_heuristic();
         }
         if (turn == "R")
         {
+            int tmp_x = arr[ind + 1].GetX();
+            int tmp_y = arr[ind + 1].GetY();
+            arr[ind + 1].SetX(arr[ind].GetX());
+            arr[ind + 1].SetY(arr[ind].GetY());
+            arr[ind].SetX(tmp_x);
+            arr[ind].SetY(tmp_y);
             std::swap(arr[ind], arr[ind + 1]);
             Node::Increase_g();
+            arr[ind + 1].Calculate_heuristic();
+            arr[ind].Calculate_heuristic();
         }
         if (turn == "U")
         {
+            int tmp_x = arr[ind - 3].GetX();
+            int tmp_y = arr[ind - 3].GetY();
+            arr[ind - 3].SetX(arr[ind].GetX());
+            arr[ind - 3].SetY(arr[ind].GetY());
+            arr[ind].SetX(tmp_x);
+            arr[ind].SetY(tmp_y);
             std::swap(arr[ind], arr[ind - 3]);
             Node::Increase_g();
+            arr[ind - 3].Calculate_heuristic();
+            arr[ind].Calculate_heuristic();
         }
         if (turn == "D")
         {
+            int tmp_x = arr[ind + 3].GetX();
+            int tmp_y = arr[ind + 3].GetY();
+            arr[ind + 3].SetX(arr[ind].GetX());
+            arr[ind + 3].SetY(arr[ind].GetY());
+            arr[ind].SetX(tmp_x);
+            arr[ind].SetY(tmp_y);
             std::swap(arr[ind], arr[ind + 3]);
             Node::Increase_g();
+            arr[ind + 3].Calculate_heuristic();
+            arr[ind].Calculate_heuristic();
         }
         std::vector<std::string> tmp;
         prev_turns.push_back(turn);

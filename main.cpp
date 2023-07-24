@@ -30,6 +30,8 @@ int main()
 
     Calculate_Manhattan_distance(unique);
 
+    Node::Set_f(Node::Get_h());
+
     if (!Solve(unique, "", prev_turns).empty())
     {
         std::cout << "Heureka" << std::endl;
