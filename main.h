@@ -164,26 +164,42 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset,
 
     int ind = GetNode(nodes, offset);
 
+    int R_heur;
+    int L_heur;
+    int U_heur;
+    int D_heur;
+
     int R = count(prev_turns.begin(), prev_turns.end(), "R");
     int L = count(prev_turns.begin(), prev_turns.end(), "L");
     int U = count(prev_turns.begin(), prev_turns.end(), "U");
     int D = count(prev_turns.begin(), prev_turns.end(), "D");
 
-    int R_heur = nodes[ind + 1].Getheuristic();
-    int L_heur = nodes[ind - 1].Getheuristic();
-    int U_heur = nodes[ind - 3].Getheuristic();
-    int D_heur = nodes[ind + 3].Getheuristic();
-
-    priorities.push_back(R_heur);
-    priorities.push_back(L_heur);
-    priorities.push_back(U_heur);
-    priorities.push_back(D_heur);
+    if (ind < nodes.size() - 1 && nodes[ind].GetX() < 3)
+    {
+        R_heur = nodes[ind + 1].Getheuristic();
+        priorities.push_back(R_heur);
+    }
+    if (0 < ind && 1 < nodes[ind].GetX())
+    {
+        L_heur = nodes[ind - 1].Getheuristic();
+        priorities.push_back(L_heur);
+    }
+    if (ind < nodes.size() - 3 && 1 < nodes[ind].GetY())
+    {
+        D_heur = nodes[ind + 3].Getheuristic();
+        priorities.push_back(D_heur);
+    }
+    if (2 < ind && nodes[ind].GetY() < 3)
+    {
+        U_heur = nodes[ind - 3].Getheuristic();
+        priorities.push_back(U_heur);
+    }
 
     sort(priorities.rbegin(), priorities.rend());
 
     for (int i = 0; i < priorities.size(); i++)
     {
-        if (priorities[i] == L_heur)
+        if (priorities[i] == L_heur && !count(turns.begin(), turns.end(), "L"))
         {
             if (nodes[ind].GetX() > 1)
             {
@@ -191,7 +207,7 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset,
                     turns.push_back("L");
             }
         }
-        if (priorities[i] == R_heur)
+        if (priorities[i] == R_heur && !count(turns.begin(), turns.end(), "R"))
         {
             if (nodes[ind].GetX() < 3)
             {
@@ -200,7 +216,7 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset,
                     turns.push_back("R");
             }
         }
-        if (priorities[i] == U_heur)
+        if (priorities[i] == U_heur && !count(turns.begin(), turns.end(), "U"))
         {
             if (nodes[ind].GetY() < 3)
             {
@@ -208,7 +224,7 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset,
                     turns.push_back("U");
             }
         }
-        if (priorities[i] == D_heur)
+        if (priorities[i] == D_heur && !count(turns.begin(), turns.end(), "D"))
         {
             if (nodes[ind].GetY() > 1)
             {
@@ -388,7 +404,6 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             Node::Decrease_g();
             return empty;
         }
-        Display(arr, offset);
         for (int i = 0; i < turns.size(); i++)
         {
             tmp = Solve(arr, turns[i], prev_turns, offset);
