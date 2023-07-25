@@ -75,7 +75,17 @@ int main()
 
     if (!prev_turns.empty())
     {
-        std::cout << "Heureka" << std::endl;
+        int ind = GetNode(unique, offset);
+
+        Display(unique);
+
+        for(int i = 0; i < prev_turns.size(); i++)
+        {
+            int ind = GetNode(unique, offset);
+            Turn(unique,offset,ind,prev_turns[i]);
+            Display(unique);
+        }
+        
     }
 
     std::cin >> a;
