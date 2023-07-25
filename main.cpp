@@ -10,17 +10,10 @@ int main()
     std::vector<Node> unique;
     std::vector<std::string> prev_turns;
 
-    /*Node n(6, 1, 3);
-    Node n1(3, 2, 3);
-    Node n2(1, 3, 3);
-    Node n3(8, 1, 2);
-    Node n4(2, 2, 2);
-    Node n5(4, 3, 2);
-    Node n6(7, 1, 1);
-    Node n7(5, 2, 1);
-    Node n8(9, 3, 1);*/
+    int offset = 9;
 
-    Node n(1, 1, 3);
+    // E
+    /*Node n(1, 1, 3);
     Node n1(2, 2, 3);
     Node n2(3, 3, 3);
     Node n3(9, 1, 2);
@@ -28,7 +21,41 @@ int main()
     Node n5(6, 3, 2);
     Node n6(7, 1, 1);
     Node n7(5, 2, 1);
-    Node n8(8, 3, 1);
+    Node n8(8, 3, 1);*/
+
+     // BATGIRL
+    /*Node n(2, 1, 3);
+    Node n1(6, 2, 3);
+    Node n2(3, 3, 3);
+    Node n3(8, 1, 2);
+    Node n4(1, 2, 2);
+    Node n5(5, 3, 2);
+    Node n6(4, 1, 1);
+    Node n7(9, 2, 1);
+    Node n8(7, 3, 1);*/
+
+    // EVOSOFT
+    /* Node n(8, 1, 3);
+     Node n1(9, 2, 3);
+     Node n2(5, 3, 3);
+     Node n3(2, 1, 2);
+     Node n4(3, 2, 2);
+     Node n5(7, 3, 2);
+     Node n6(4, 1, 1);
+     Node n7(1, 2, 1);
+     Node n8(6, 3, 1); */
+
+    // HOW-TO-SOLVE
+     Node n(1, 1, 3);
+     Node n1(5, 2, 3);
+     Node n2(2, 3, 3);
+     Node n3(9, 1, 2);
+     Node n4(3, 2, 2);
+     Node n5(6, 3, 2);
+     Node n6(7, 1, 1);
+     Node n7(8, 2, 1);
+     Node n8(4, 3, 1);
+
 
     unique.push_back(n);
     unique.push_back(n1);
@@ -40,11 +67,11 @@ int main()
     unique.push_back(n7);
     unique.push_back(n8);
 
-    Calculate_Manhattan_distance(unique);
+    Calculate_Manhattan_distance(unique,offset);
 
     Node::Set_f(Node::Get_h());
 
-    prev_turns = Solve(unique, "", prev_turns);
+    prev_turns = Solve(unique, "", prev_turns, offset);
 
     if (!prev_turns.empty())
     {

@@ -62,6 +62,18 @@
         "compare": "cpp",
         "concepts": "cpp",
         "algorithm": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "xstring": "cpp",
+        "iterator": "cpp",
+        "xutility": "cpp",
+        "utility": "cpp",
+        "xfacet": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp"
     }
 }
