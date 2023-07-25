@@ -153,6 +153,7 @@ int GetNode(std::vector<Node> nodes, int value)
         if (nodes[i].Getvalue() == value)
             return i;
     }
+    return 1;
 }
 
 std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset, std::vector<std::string> prev_turns, std::string prev_turn)
@@ -222,58 +223,60 @@ std::vector<std::string> Node::Get_position(std::vector<Node> nodes, int offset,
 
 bool inPlace(std::vector<Node> nodes, int offset)
 {
-    for (Node &node : nodes)
+    for (int i = 0; i < nodes.size(); i++)
     {
-        if ((node.GetIdealX() != node.GetX() && node.Getvalue() != offset) || (node.GetIdealY() != node.GetY() && node.Getvalue() != offset))
+        if ((nodes[i].GetIdealX() != nodes[i].GetX() && nodes[i].Getvalue() != offset) || (nodes[i].GetIdealY() != nodes[i].GetY() && nodes[i].Getvalue() != offset))
             return false;
     }
     return true;
 }
 
-void Display(std::vector<Node> nodes)
+void Display(std::vector<Node> nodes, int offset)
 {
     for (int i = 0; i < 1; i++)
     {
         std::cout << "_______";
     }
-     std::cout << std::endl;
-     std::cout << "|";
+    std::cout << std::endl;
+    std::cout << "|";
     for (int i = 0; i < 3; i++)
     {
-        if(nodes[i].Getvalue() != 9)
+        if (nodes[i].Getvalue() != offset)
         {
-             std::cout << nodes[i].Getvalue()<< "|";
+            std::cout << nodes[i].Getvalue() << "|";
         }
         else
         {
-             std::cout << " "<< "|";
+            std::cout << " "
+                      << "|";
         }
-       
     }
     std::cout << std::endl;
-     std::cout << "|";
+    std::cout << "|";
     for (int i = 3; i < 6; i++)
     {
-        if(nodes[i].Getvalue() != 9)
+        if (nodes[i].Getvalue() != offset)
         {
-             std::cout << nodes[i].Getvalue()<< "|";
+            std::cout << nodes[i].Getvalue() << "|";
         }
         else
         {
-             std::cout << " "<< "|";
+            std::cout << " "
+                      << "|";
         }
     }
     std::cout << std::endl;
-     std::cout << "|";
+    std::cout << "|";
     for (int i = 6; i < 9; i++)
     {
-        if(nodes[i].Getvalue() != 9)
+        if (nodes[i].Getvalue() != offset)
         {
-             std::cout << nodes[i].Getvalue()<< "|";
+            std::cout << nodes[i].Getvalue() << "|";
         }
         else
         {
-             std::cout << " "<< "|";
+            std::cout << " "
+                      << "|";
         }
     }
     std::cout << std::endl;
@@ -357,9 +360,9 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             return prev_turns;
         int ind = GetNode(arr, offset);
         std::vector<std::string> turns = arr[ind].Get_position(arr, offset, prev_turns, turn);
-        for (const std::string &t : turns)
+        for (int i = 0; i < turns.size(); i++)
         {
-            std::vector<std::string> tmp = Solve(arr, t, prev_turns, offset);
+            std::vector<std::string> tmp = Solve(arr, turns[i], prev_turns, offset);
             if (!tmp.empty())
             {
                 return tmp;
@@ -385,9 +388,10 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             Node::Decrease_g();
             return empty;
         }
-        for (const std::string &t : turns)
+        Display(arr, offset);
+        for (int i = 0; i < turns.size(); i++)
         {
-            tmp = Solve(arr, t, prev_turns, offset);
+            tmp = Solve(arr, turns[i], prev_turns, offset);
             if (!tmp.empty())
             {
                 return tmp;

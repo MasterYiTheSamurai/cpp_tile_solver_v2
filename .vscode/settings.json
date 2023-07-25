@@ -75,5 +75,6 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
