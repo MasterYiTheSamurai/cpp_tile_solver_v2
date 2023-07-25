@@ -89,6 +89,8 @@ int main()
         }
     }
 
+    //Display(unique, offset);
+
     Calculate_Manhattan_distance(unique, offset);
 
     Node::Set_f(Node::Get_h());
