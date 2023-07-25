@@ -38,6 +38,8 @@ int main()
 
     Node::Set_f(Node::Get_h());
 
+    Display(unique, offset);
+
     try
     {
         prev_turns = Solve(unique, "", prev_turns, offset);
@@ -51,8 +53,6 @@ int main()
     {
 
         int ind = GetNode(unique, offset);
-
-        Display(unique, offset);
 
         for (int i = 0; i < prev_turns.size(); i++)
         {
