@@ -15,6 +15,7 @@ private:
     static int g;
     static int f;
     static int h;
+    static int max_turns;
 
 public:
     Node(int v, int x, int y)
@@ -28,6 +29,14 @@ public:
     void Set_ideals();
     void Calculate_heuristic();
     std::vector<std::string> Get_position(std::vector<Node> nodes, int offset, std::vector<std::string> prev_turns, std::string prev_turn);
+    static void Decrease_Max_Turns()
+    {
+        Node::max_turns--;
+    }
+    static int Get_Max_Turns()
+    {
+        return Node::max_turns;
+    }
     static void Decrease_g()
     {
         Node::g--;
@@ -103,6 +112,8 @@ int Node::g = 0;
 int Node::f = 0;
 
 int Node::h = 0;
+
+int Node::max_turns = 100;
 
 void Node::Set_ideals()
 {
@@ -363,6 +374,7 @@ void Turn(std::vector<Node> &arr, int offset, int ind, std::string turn)
         arr[ind].Calculate_heuristic();
         Calculate_Manhattan_distance(arr, offset);
     }
+    Node::Decrease_Max_Turns();
 }
 
 std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vector<std::string> prev_turns, int offset)
@@ -374,6 +386,8 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             return empty;
         if (inPlace(arr, offset))
             return prev_turns;
+        if (Node::Get_Max_Turns() == 0)
+            return empty;
         int ind = GetNode(arr, offset);
         std::vector<std::string> turns = arr[ind].Get_position(arr, offset, prev_turns, turn);
         for (int i = 0; i < turns.size(); i++)
@@ -385,6 +399,8 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             }
             else
             {
+                if (Node::Get_Max_Turns() == 0)
+                    return empty;
                 Node::Decrease_g();
             }
         }
@@ -398,6 +414,8 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
         prev_turns.push_back(turn);
         if (inPlace(arr, offset))
             return prev_turns;
+        if (Node::Get_Max_Turns() == 0)
+            return empty;
         std::vector<std::string> turns = arr[ind].Get_position(arr, offset, prev_turns, turn);
         if (turns.empty())
         {
@@ -414,6 +432,8 @@ std::vector<std::string> Solve(std::vector<Node> arr, std::string turn, std::vec
             else
             {
                 Node::Decrease_g();
+                if (Node::Get_Max_Turns() == 0)
+                    return empty;
             }
         }
     }

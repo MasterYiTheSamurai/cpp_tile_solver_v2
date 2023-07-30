@@ -3,6 +3,25 @@
 #include "main.h"
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <thread>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+void crossPlatformSleep(int seconds)
+{
+#ifdef _WIN32
+    // Windows implementation
+    Sleep(seconds * 1000);
+#else
+    // Unix-based (Mac and Linux) implementation
+    usleep(seconds * 1000000);
+#endif
+}
 
 int main()
 {
@@ -10,6 +29,7 @@ int main()
     srand(time(NULL));
     char a;
     int tmp;
+    int seconds = 1;
 
     std::vector<Node> unique;
     std::vector<std::string> prev_turns;
@@ -40,15 +60,8 @@ int main()
 
     Display(unique, offset);
 
-    try
-    {
-        prev_turns = Solve(unique, "", prev_turns, offset);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "No solution found." << '\n';
-    }
-    
+    prev_turns = Solve(unique, "", prev_turns, offset);
+
     if (!prev_turns.empty())
     {
 
@@ -59,6 +72,7 @@ int main()
             int ind = GetNode(unique, offset);
             Turn(unique, offset, ind, prev_turns[i]);
             Display(unique, offset);
+            crossPlatformSleep(seconds);
         }
     }
     else
@@ -66,7 +80,7 @@ int main()
         std::cout << "No solution found." << std::endl;
     }
 
-    std::cin >> a;
+    // std::cin >> a;
 
     return 0;
 }
